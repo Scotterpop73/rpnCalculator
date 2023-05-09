@@ -11,20 +11,47 @@
 var prompt = require('prompt-sync')({ sigint: true });
 //variables
 let userInput = '';
+let userInputArray = [];
 let playAgain = true;
 
+let howManyNumbers = 0;
+let howManyOperators = 0;
+
 while (playAgain) {
-    
-    userInput = prompt('Enter your calculation: ');
-    
+    let isInputValid = false;
+
+    while(!isInputValid){
+
+        userInput = prompt('Enter your calculation: ');
+        
+        //Validation if user inputted a letter or special character
+        //Going to use regex for data validation
+        let correctChars = /^[\d+\-*/. ]+$/;
+        
+        //Need to check if there is a correct amount of operators
+        //Should always be one less operators than numbers inputted
+        //filter only the operators out of the userInput
+        howManyOperators = userInput.split(' ').filter(char => isNaN(char)).length;
+        //filter only the numbers out of the userInput
+        howManyNumbers = userInput.split(' ').filter(char => !isNaN(char)).length;
+
+        if(correctChars.test(userInput) && howManyNumbers - 1 == howManyOperators){
+            isInputValid = true;
+        }else{
+            userInput = '';
+            console.log('Please enter in valid numbers or operators');
+        }
+    }
+        
+
     //split the string so we now have an array
-    let userInputArray = userInput.split(' ');
-    
+    userInputArray = userInput.split(' ');
+
     console.log(userInputArray);
     
     rpnEvaluation(userInputArray);
     
-    userInput = prompt("Press 'q' to quit or any other key to do another calculation: ").toLowerCase();
+    userInput = prompt("Press 'q' to quit or any other key to do a new calculation: ").toLowerCase();
     
     if(userInput === 'q'){
         playAgain = false;
