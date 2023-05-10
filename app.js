@@ -1,27 +1,30 @@
 //Step 1: Get the user's input - complete
 //Step 2: Validate user's input
-//Step 3: If not valid input, have user input again
+//Step 3: If not valid input, have user input again - complete
 //Step 4: If valid input, do the calculation - thinking maybe to use recursion to do this - complete
 //Step 5: Output answer - complete
-//Step 6: Output option to quit or to do another calculation
+//Step 6: Output option to quit or to do another calculation - complete
 
 //rpn follows the concept of a stack, which is a last in / first out concept
 
 //using prompt sync for user input
 var prompt = require('prompt-sync')({ sigint: true });
+
 //variables
 let userInput = '';
 let userInputArray = [];
 let playAgain = true;
-
 let howManyNumbers = 0;
 let howManyOperators = 0;
 
+
 while (playAgain) {
+    //boolean for the user's input, if their input is valid the value will flip to true to get out of the nested while loop
     let isInputValid = false;
 
     while(!isInputValid){
 
+        //Ask for the user to input their calculation
         userInput = prompt('Enter your calculation: ');
         
         //Validation if user inputted a letter or special character
@@ -35,6 +38,7 @@ while (playAgain) {
         //filter only the numbers out of the userInput
         howManyNumbers = userInput.split(' ').filter(char => !isNaN(char)).length;
 
+        //conditional if the user's input is valid or not
         if(correctChars.test(userInput) && howManyNumbers - 1 == howManyOperators){
             isInputValid = true;
         }else{
