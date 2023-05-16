@@ -3,7 +3,7 @@
 //Step 3: If not valid input, have user input again - complete
 //Step 4: If valid input, do the calculation - thinking maybe to use recursion to do this - complete
 //Step 5: Output answer - complete
-//Step 6: Output option to quit or to do another calculation - complete
+//Step 6: Output option to quit or to do another calculation
 
 //rpn follows the concept of a stack, which is a last in / first out concept
 
@@ -25,7 +25,7 @@ while (playAgain) {
     while(!isInputValid){
 
         //Ask for the user to input their calculation
-        userInput = prompt('Enter your calculation: ');
+        userInput = prompt('Enter your calculation with a space between each number and operator: ');
         
         //Validation if user inputted a letter or special character
         //Going to use regex for data validation
