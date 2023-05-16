@@ -78,4 +78,60 @@ function calculate(num1, num2, operator){
 } 
 ```
 The code block above defines a function called calculate that takes in three parameters: num1, num2, and operator. It performs a basic arithmetic calculation based on the operator provided and returns the result. First, we initialize a variable called solution to 0. This variable will store the result of the arithmetic calculation. We use a switch statement to handle different cases based on the value of the operator. If the operator is +, it adds num1 and num2 together and assigns the result to solution. If the operator is -, it subtracts num1 and num2 together and assigns the result to solution. If the operator is *, it multiplies num1 and num2 together and assigns the result to solution. If the operator is /, it divides num1 and num2 together and assigns the result to solution. If none of the above cases match, the code assigns the string 'Invalid operator, please enter a valid operator.' to solution. This handles the scenario where an invalid operator is provided. The break statements in each case terminate the switch statement and prevent the code from executing subsequent cases. Finally, the solution variable is returned as the result of the calculate function.
+
+```js
+//variables
+let userInput = '';
+let userInputArray = [];
+let playAgain = true;
+let howManyNumbers = 0;
+let howManyOperators = 0;
+
+
+while (playAgain) {
+    //boolean for the user's input, if their input is valid the value will flip to true to get out of the nested while loop
+    let isInputValid = false;
+
+    while(!isInputValid){
+
+        //Ask for the user to input their calculation
+        userInput = prompt('Enter your calculation with a space between each number and operator: ');
+        
+        //Validation if user inputted a letter or special character
+        //Going to use regex for data validation
+        let correctChars = /^[\d+\-*/. ]+$/;
+        
+        //Need to check if there is a correct amount of operators
+        //Should always be one less operators than numbers inputted
+        //filter only the operators out of the userInput
+        howManyOperators = userInput.split(' ').filter(char => isNaN(char)).length;
+        //filter only the numbers out of the userInput
+        howManyNumbers = userInput.split(' ').filter(char => !isNaN(char)).length;
+
+        //conditional if the user's input is valid or not
+        if(correctChars.test(userInput) && howManyNumbers - 1 == howManyOperators){
+            isInputValid = true;
+        }else{
+            userInput = '';
+            console.log('Please enter in valid numbers or operators');
+        }
+    }
+        
+
+    //split the string so we now have an array
+    userInputArray = userInput.split(' ');
+
+    console.log(userInputArray);
+    
+    rpnEvaluation(userInputArray);
+    
+    userInput = prompt("Press 'q' to quit or any other key to do a new calculation: ").toLowerCase();
+    
+    if(userInput === 'q'){
+        playAgain = false;
+    }
+}
+
+```
+The code block above first initializes the variables. Then the code enters a while loop that continues as long as playAgain is true. Within the while loop, it sets the isInputValid variable to false. This variable will be used to check if the user's input is valid. The code enters another while loop that continues until isInputValid becomes true. Inside the inner while loop, the program prompts the user to enter their calculation using prompt and assigns the input to the userInput variable. We use regular expression '(/^[\d+\-*/. ]+$/)' to validate that the input consists of only valid characters: digits, plus, minus, multiplication, division, and spaces. Then, we count the number of operators and numbers in the user's input using the split method, filter, and isNaN function. It compares these counts to ensure that there is always one less operator than the number of numbers. If the input passes the validation checks, the isInputValid variable is set to true, and the program proceeds. Otherwise, the userInput variable is cleared, and an error message is console logged. Next, the user's input is split into an array using the split method with a space as the separator, and the resulting array is stored in userInputArray. The userInputArray is then console logged. The function rpnEvaluation is called, passing userInputArray as an argument. This function evaluates the RPN expression. Then, the program prompts the user with another message using prompt, asking if they want to quit or perform a new calculation. The user's input is converted to lowercase and stored in userInput. If the user enters 'q', indicating they want to quit, the playAgain variable is set to false, and the outer while loop will not execute again. Otherwise, the program continues by repeating the loop.
 ## Trade-offs and Future Updates
