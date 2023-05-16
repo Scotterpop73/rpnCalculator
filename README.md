@@ -17,7 +17,7 @@ Reverse Polish notation (RPN) is a mathematical notation in which operators foll
 ## Description
 Since I decided to use JavaScript, I need to import a node module to be able to get the user's input. `var prompt = require('prompt-sync')({ sigint: true });` This line of code allows us to get the user input and allows the option ctrl + c to quit the application.
 
-```
+```js
 function rpnEvaluation(userInputArray){
     //if there is only one number in the array, return that number
     if(userInputArray.length === 1){
