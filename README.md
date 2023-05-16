@@ -50,4 +50,32 @@ function rpnEvaluation(userInputArray){
 }
 ```
 The function rpnEvaluation above takes in a parameter that is the user's input that got turned into an array. First, we check if there is only one number in the array, if that condition is true then we return and console log the number. If there is more than one number in the array, we separate the array into two arrays. One array contains only numbers and the other array contains only operators. Then we take the first element from the operator array to get the first operator and the first two elements from the number array. Also, we use parseFloat to convert the two numbers from the array from a string to an array. Next, passing in the two numbers and operator as arguments, we call the calculate function to do the calculation and store the result in a variable called result. Then using the splice method, we remove the two numbers that were evaluated from the number array and add result into the number array. Also, we remove the first operator from the operator array using splice. Then we concat the number array and operator array, so that we can pass the concat array as an argument into the rpnEvaluation function. Finally, the code recursively calls the rpnEvaluation function with the updated concatArray. This process continues until there is only one number left in the array, which is then returned and logged.
+
+```js
+function calculate(num1, num2, operator){
+    let solution = 0;
+    
+    //Writing a switch statement, each case will be an operator and the default will throw an error for an invalid operator
+    switch(operator){
+        case '+':
+            solution = num1 + num2;
+            break;
+        case '-':
+            solution = num1 - num2;
+            break;
+        case '*':
+            solution = num1 * num2;
+            break;
+        case '/':
+            solution = num1 / num2;
+            break;
+    
+        default:
+            solution = 'Invalid operator, please enter a valid operator.';
+            break;
+    }
+    return solution;
+} 
+```
+The code block above defines a function called calculate that takes in three parameters: num1, num2, and operator. It performs a basic arithmetic calculation based on the operator provided and returns the result. First, we initialize a variable called solution to 0. This variable will store the result of the arithmetic calculation. We use a switch statement to handle different cases based on the value of the operator. If the operator is +, it adds num1 and num2 together and assigns the result to solution. If the operator is -, it subtracts num1 and num2 together and assigns the result to solution. If the operator is *, it multiplies num1 and num2 together and assigns the result to solution. If the operator is /, it divides num1 and num2 together and assigns the result to solution. If none of the above cases match, the code assigns the string 'Invalid operator, please enter a valid operator.' to solution. This handles the scenario where an invalid operator is provided. The break statements in each case terminate the switch statement and prevent the code from executing subsequent cases. Finally, the solution variable is returned as the result of the calculate function.
 ## Trade-offs and Future Updates
