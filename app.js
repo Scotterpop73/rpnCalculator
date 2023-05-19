@@ -32,6 +32,7 @@ while (playAgain) {
     }
 
     //If 'q' is entered exit the program
+    //use continue to jump over one iteration in the loop
     if (userInput === "q") {
         playAgain = false;
         continue;
@@ -61,7 +62,7 @@ while (playAgain) {
     }
 }
 
-//write a function to pass in the userInputArray 
+//write a function to do the rpn evaluation 
 function rpnEvaluation() {
     //filter only the operators out of the userInputArray
     let operatorArray = userInputArray.filter((char) => isNaN(char));
@@ -77,14 +78,16 @@ function rpnEvaluation() {
         const num1 = parseFloat(numberArray.pop());
 
         calculatedResult = calculate(num1, num2, operator);
-        //remove the elements that were evaluated and add in the result into the array
+        //add in the result into the array
         numberArray.push(calculatedResult);
     }
+    //update userInputArray with the updated calculation
     userInputArray = numberArray;
 
     //remove the first operator from the operatorArray
     operatorArray.splice(0, 1);
 
+    //return calculatedResult to be displayed to the user
     return calculatedResult;
 }
 
