@@ -1,4 +1,4 @@
-//Step 1: Get the user's input - complete (has to be all in one line)
+//Step 1: Get the user's input - complete
 //Step 2: Validate user's input - complete
 //Step 3: If not valid input, have user input again - complete
 //Step 4: If valid input, do the calculation - thinking maybe to use recursion to do this - complete
@@ -30,7 +30,7 @@ while (playAgain){
 
         //before asking for the user's calculation, check if there is a previous solution and ask the user if they want to use it
         if(previousSolution !== 0){
-            const usePrevious = prompt("Do you want to use the previous solution? (y/n): ").toLowerCase();
+            const usePrevious = prompt('Do you want to use the previous solution? (y/n): ').toLowerCase();
             if(usePrevious === 'y'){
                 //put the previousSolution and the user's input into the same string
                 userInput = previousSolution.toString() + ' ' + prompt('Enter the next operator and number: ');
@@ -92,13 +92,14 @@ function rpnEvaluation(stack){
     //logic for getting two numbers and operator to call the calculate function goes here
     //use parseFloat to convert from a string to a number
     const operator = operatorArray[0];
-    const num1 = parseFloat(numberArray[0]);
-    const num2 = parseFloat(numberArray[1]);
+    const num2 = parseFloat(numberArray.pop());
+    const num1 = parseFloat(numberArray.pop());
+    
 
     const result = calculate(num1, num2, operator);
 
     //remove the elements that were evaluated and add in the result into the array
-    numberArray.splice(0, 2, result);
+    numberArray.push(result);
     //remove the first operator from the operatorArray
     operatorArray.splice(0, 1);
 
