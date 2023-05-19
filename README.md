@@ -18,38 +18,33 @@ Reverse Polish notation (RPN) is a mathematical notation in which operators foll
 Since I decided to use JavaScript, I need to import a node module to be able to get the user's input. `var prompt = require('prompt-sync')({ sigint: true });` This line of code allows us to get the user input and allows the option ctrl + c to quit the application.
 
 ```js
-function rpnEvaluation(userInputArray){
-    //if there is only one number in the array, return that number
-    if(userInputArray.length === 1){
-        return console.log(parseFloat(userInputArray[0]));
-    }
-
+function rpnEvaluation() {
     //filter only the operators out of the userInputArray
-    let operatorArray = userInputArray.filter(char => isNaN(char));
+    let operatorArray = userInputArray.filter((char) => isNaN(char));
     //filter only the numbers out of the userInputArray
-    let numberArray = userInputArray.filter(char => !isNaN(char));
-    
-    //logic for getting two numbers and operator to call the calculate function goes here
-    //use parseFloat to convert from a string to a number
-    const operator = operatorArray[0];
-    const num1 = parseFloat(numberArray[0]);
-    const num2 = parseFloat(numberArray[1]);
+    let numberArray = userInputArray.filter((char) => !isNaN(char));
 
-    const result = calculate(num1, num2, operator);
+    let calculatedResult;
+    for (let i = 0; i < operatorArray.length; i++) {
+        //logic for getting two numbers and operator to call the calculate function goes here
+        //use parseFloat to convert from a string to a number
+        const operator = operatorArray[i];
+        const num2 = parseFloat(numberArray.pop());
+        const num1 = parseFloat(numberArray.pop());
 
-    //remove the elements that were evaluated and add in the result into the array
-    numberArray.splice(0, 2, result);
+        calculatedResult = calculate(num1, num2, operator);
+        //remove the elements that were evaluated and add in the result into the array
+        numberArray.push(calculatedResult);
+    }
+    userInputArray = numberArray;
+
     //remove the first operator from the operatorArray
-    operatorArray.splice(0,1);
+    operatorArray.splice(0, 1);
 
-    //concat the two arrays so that the operators are in the array
-    const concatArray = numberArray.concat(operatorArray);
-
-    //call the function again with an updated array
-    return rpnEvaluation(concatArray);
+    return calculatedResult;
 }
 ```
-The function rpnEvaluation above takes in a parameter that is the user's input that got turned into an array. First, we check if there is only one number in the array, if that condition is true then we return and console log the number. If there is more than one number in the array, we separate the array into two arrays. One array contains only numbers and the other array contains only operators. Then we take the first element from the operator array to get the first operator and the first two elements from the number array. Also, we use parseFloat to convert the two numbers from the array from a string to an array. Next, passing in the two numbers and operator as arguments, we call the calculate function to do the calculation and store the result in a variable called result. Then using the splice method, we remove the two numbers that were evaluated from the number array and add result into the number array. Also, we remove the first operator from the operator array using splice. Then we concat the number array and operator array, so that we can pass the concat array as an argument into the rpnEvaluation function. Finally, the code recursively calls the rpnEvaluation function with the updated concatArray. This process continues until there is only one number left in the array, which is then returned and logged.
+The function starts by filtering the userInputArray to separate operators and numbers. We use the filter method to create the two separate arrays. Next, we name a variable 'calculatedResult' to store the result for the rpn evaluation. Then we use a for loop to iterate over the operatorArray. Next, we pop two numbers from the numberArray and get the first operator from the operatorArray. Then we use parseFloat on the number strings to convert them to numeric values. Then we call the calculate function, passing the two numbers and the operator as arguments, to do the calculation. Next, we add the result back to the numberArray. Then we update the userInputArray with the elements from numberArray so that when we do more iterations of the for loop, we will have the correct numbers from the updated array. Then we remove the first operator from the operatorArray using the splice method. When the for loop finishes, we store the final result in calculatedResult and then we return the calculatedResult to be displayed to the user.
 
 ```js
 function calculate(num1, num2, operator){
@@ -81,57 +76,56 @@ The code block above defines a function called calculate that takes in three par
 
 ```js
 //variables
-let userInput = '';
+let userInput = "";
 let userInputArray = [];
 let playAgain = true;
-let howManyNumbers = 0;
 let howManyOperators = 0;
 
+//Validation if user inputted a letter or special character
+//Going to use regex for data validation
+let correctChars = /^[\d+\-*/. ]+$/;
 
 while (playAgain) {
-    //boolean for the user's input, if their input is valid the value will flip to true to get out of the nested while loop
-    let isInputValid = false;
-
-    while(!isInputValid){
-
+    //If it's not the first input, ask for another number or operator
+    if (userInputArray.length) {
+        userInput = prompt(`Enter another number or operator. Enter 'q' to quit: `);
+    } else {
         //Ask for the user to input their calculation
-        userInput = prompt('Enter your calculation with a space between each number and operator: ');
-        
-        //Validation if user inputted a letter or special character
-        //Going to use regex for data validation
-        let correctChars = /^[\d+\-*/. ]+$/;
-        
-        //Need to check if there is a correct amount of operators
-        //Should always be one less operators than numbers inputted
-        //filter only the operators out of the userInput
-        howManyOperators = userInput.split(' ').filter(char => isNaN(char)).length;
-        //filter only the numbers out of the userInput
-        howManyNumbers = userInput.split(' ').filter(char => !isNaN(char)).length;
-
-        //conditional if the user's input is valid or not
-        if(correctChars.test(userInput) && howManyNumbers - 1 == howManyOperators){
-            isInputValid = true;
-        }else{
-            userInput = '';
-            console.log('Please enter in valid numbers or operators');
-        }
+        userInput = prompt(
+            `Enter your calculation with a space between each number and operator. Enter 'q' to quit: `
+        );
     }
-        
+
+    //If 'q' is entered exit the program
+    if (userInput === "q") {
+        playAgain = false;
+        continue;
+    }
+
+    //Data validation if a correct character was inputted
+    const isValid = correctChars.test(userInput);
+    if (!isValid) {
+        console.log(`Enter in a valid number or operator`);
+        continue;
+    }
+
+    //Need to check if there is a correct amount of operators
+    //Should always be one less operators than numbers inputted
+    //filter only the operators out of the userInput
+    howManyOperators = userInput.split(" ").filter((char) => isNaN(char)).length;
 
     //split the string so we now have an array
-    userInputArray = userInput.split(' ');
+    userInputArray = userInputArray.concat(userInput.split(" "));
 
-    console.log(userInputArray);
-    
-    rpnEvaluation(userInputArray);
-    
-    userInput = prompt("Press 'q' to quit or any other key to do a new calculation: ").toLowerCase();
-    
-    if(userInput === 'q'){
-        playAgain = false;
+    //need to ensure there is one operator present to run an evaluation. else - console log the number
+    if (howManyOperators > 0) {
+        const result = rpnEvaluation();
+        console.log(`Result: ${result}`);
+    } else {
+        console.log(userInput);
     }
 }
-
 ```
-The code block above first initializes the variables. Then the code enters a while loop that continues as long as playAgain is true. Within the while loop, it sets the isInputValid variable to false. This variable will be used to check if the user's input is valid. The code enters another while loop that continues until isInputValid becomes true. Inside the inner while loop, the program prompts the user to enter their calculation using prompt and assigns the input to the userInput variable. We use regular expression '(/^[\d+\-*/. ]+$/)' to validate that the input consists of only valid characters: digits, plus, minus, multiplication, division, and spaces. Then, we count the number of operators and numbers in the user's input using the split method, filter, and isNaN function. It compares these counts to ensure that there is always one less operator than the number of numbers. If the input passes the validation checks, the isInputValid variable is set to true, and the program proceeds. Otherwise, the userInput variable is cleared, and an error message is console logged. Next, the user's input is split into an array using the split method with a space as the separator, and the resulting array is stored in userInputArray. The userInputArray is then console logged. The function rpnEvaluation is called, passing userInputArray as an argument. This function evaluates the RPN expression. Then, the program prompts the user with another message using prompt, asking if they want to quit or perform a new calculation. The user's input is converted to lowercase and stored in userInput. If the user enters 'q', indicating they want to quit, the playAgain variable is set to false, and the outer while loop will not execute again. Otherwise, the program continues by repeating the loop.
+The code block above first declares and initializes our variables. The code then enters a while loop until the user chooses to quit. Next, we check the length of of userInputArray to see if the user has entered previous numbers or operators. Then we check if the user entered 'q'. If they did, we quit the program. Next, we data validate the user's input using regex. Next, we check how many operators there are. Then we split userInput and concatenate it with userInputArray, so we have the previous numbers and operators. Then we check if there is at least one operator present. If that is the case, we can call the rpnEvaluation function. If there are no operators, then that means a number was inputted so we console log the number. Lastly, we store the result of the evaluation in the result variable and print it to the console.
 ## Trade-offs and Future Updates
+I really want to revisit the data validation and fully complete it. For example, in the state of the current code, the user will be able to have more operators than numbers and that will break the program. I would like to say, "There are too many operators, please enter in a valid number of operators."
